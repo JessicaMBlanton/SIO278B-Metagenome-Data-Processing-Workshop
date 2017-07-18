@@ -21,12 +21,11 @@ The 16S rRNA gene is currently the standard for taxonomic assignment for bacteri
 
 ###**The GUM007 16S rRNA amplicon profile**
 Now's a good time to look at the amplicon profile that was run on GUM007 DNA before the shotgun sequencing too place. 
-
-![Agarwal,Blanton2017](/Users/jess/Dropbox/SCOHH_sponges/pbde\ paper/poster\ figs/Figure_3_bkgrnd.pdf) 
+<img src="https://github.com/JessicaMBlanton/SIO278B-Metagenome-Data-Processing-Workshop/blob/master/tutorials/WeekVI_binning_compositional_tutorials/Figure_3_bkgrnd.png" height="500">
 
 To explore in more detail [download this zip to your local laptop](https://www.dropbox.com/s/27arcojnswn46x3/GUM_007_102_096_barcharts.zip?dl=1) and check out the **bar_charts.html** file. It includes two other sponge types for comparison, and all three were processed to enrich for the cyanobacterial symbiont shown here:
 
- ![*Hormoscilla (Oscillatoria) spongeliae*](/Users/jess/Dropbox/SCOHH_sponges/Oscillatoria\ microscopy/Top_picks/Hormoscilla_spongelieae_63x.pdf).
+<img src="https://github.com/JessicaMBlanton/SIO278B-Metagenome-Data-Processing-Workshop/blob/master/tutorials/WeekVI_binning_compositional_tutorials/Hormoscilla_spongelieae_63x.png">
 
 ###**On using BLAST+**
 
@@ -219,7 +218,7 @@ Count Eukaryotic hits
 
 	grep "D_0__Eukaryota" megahit_041617_ribosomal_ctg_first.txt -c
 
--
+---
 Summary of this assembly:
 	
 
@@ -231,5 +230,6 @@ Summary of this assembly:
 
 *Q. Given what you know about GUM007, including the amplicon-based ribosomal profile, do you think this subset of the data + assembly went well?*
 
--
+---
+
 
