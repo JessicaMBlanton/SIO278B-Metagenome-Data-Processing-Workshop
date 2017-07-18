@@ -46,17 +46,14 @@ Have you noticed that looking at tab-dilimited, comma-delimited, or other docume
 
 ```
 sudo apt install ncbi-blast+
-
 ```
 
-Download Custom scripts (thanks Sheila Podell!), and make them executable. These are handy manipulators of text documents.
+Download and make executable a custom script that will select the first entry from your blast results. (This script is part of Sheila Podell's [DARKHORSEv2](http://darkhorse.ucsd.edu/) accessory-script collection.)
 
 ```
 cd /opt/
-sudo wget https://www.dropbox.com/s/33ys9vd9fo442vt/outer_join_tabfiles.pl
-sudo chmod +x /opt/outer_join_tabfiles.pl 
 
-sudo wget https://www.dropbox.com/s/5fun5m624uiosyd/select_tab_first.pl
+sudo wget https://github.com/JessicaMBlanton/SIO278B-Metagenome-Data-Processing-Workshop/blob/master/tutorials/WeekVI_binning_compositional_tutorials/select_tab_first.pl
 sudo chmod +x /opt/select_tab_first.pl 
 ```
 Install Tabview for easy viewing of csv/tsv documents.
@@ -118,7 +115,6 @@ The first thing is that we need to get the SILVA ribosomal databases in a "BLAST
 cd ~/databases/silva_blastdb
 makeblastdb -in Silva_119_rep_set97.fna -dbtype nucl;
 makeblastdb -in Silva_119_rep_set99.fna -dbtype nucl
-
 ```
 
 *Q. How many sequnces are in each set?*
@@ -154,32 +150,23 @@ now Look at your results using tabview
 
 ### Combine BLAST results with taxonomy
 
-Our blast results contain a lot of good info, but not the actual taxonomic assignments. We will add these using a nice perl script written by Sheila Podell: */opt/outer_join_tabfiles.pl* 
+Our blast results contain a lot of good info, but not the actual taxonomic assignments. We will add these from the SILVA-defined taxonomy using the command "join".
 
-This script combines the entries of two tab-delimited files. The rows in one document are kept in order, and the rows of the second document are matched and pasted to it. Let’s call **doc1 the "frame"** and **doc2 the "follow"**.
+This command combines the entries of two tab-delimited files that are sorted in the same order. The rows in one document are kept in order, and the rows of the second document are matched and pasted to it.
 
-We will use our blast results as the frame document, and follow this with the SILVA-described taxonomy.
+Sort your results file by the second field (the result accession numbers)
 
-Get a list of hit subject IDs to retrieve from taxonomy file
-
-	cut -f2 ribosomal_contig.prelim.m8 > ribosomal_contigs.hitID
-
-Get the taxonomic assignments for each subject ID
+	sort -n -k 2 ribosomal_contig.prelim.m8 > GUM007_idba50_119.prelim.m8.sort
 	
-	grep -f ribosomal_contigs.hitID /home/ubuntu/databases/silva_blastdb/taxonomy_97_7_levels.txt > ribosomal_tax_follow.txt
+The sort the SILVA taxonomy map file by the first  field (the result accession numbers)
 
-The category used for joining must be the first column in each document. So re-paste "subject IDs" as first column in the blast results file
-	
-	paste ribosomal_contigs.hitID ribosomal_contig.prelim.m8 > ribosomal_contig_frame.m8
+	sort -n -k 1 /home/ubuntu/databases/silva_blastdb/taxonomy_97_7_levels.txt > silva_119_97.sort
 
+Join the files specifying the accession field for the first file and second file, and cut to only the fields of interest
 
-Join the hits with their taxonomic string
+	join -12 -21 GUM007_idba50_119.prelim.m8.sort silva_119_97.sort | cut -f2-13,15 > ribosomal_ctg_blasttax.txt;
 
-	/opt/outer_join_tabfiles.pl ribosomal_contig_frame.m8 ribosomal_tax_follow.txt | cut -f2-13,15 > ribosomal_ctg_blasttax.txt;
-
-
-Make a header row describing each column This includes the [standard columns for .m8 format](http://www.pangloss.com/wiki/Blast), but modified to fit the column addition made above
-
+Make a header row describing each column. This includes the [standard columns for .m8 format](http://www.pangloss.com/wiki/Blast), but modified to fit the column addition made above.
 
 	echo '#query_id;subject_id;%_identity;alignment_length;mismatches;gap_opens;q._start;q._end;s._start;s._end;evalue;bit_score;taxonomy' | sed 's/;/\t/g' > header.txt
 
